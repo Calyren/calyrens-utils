@@ -16,8 +16,8 @@ public class CalyrenSUtils implements ModInitializer {
 	public static final String MOD_ID = "calyrens_utils";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-//	public static final Holder<MobEffect> EXAMPLE_EFFECT =
-//			Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(MOD_ID, "example"), new ExampleMobEffectThatUsesTheInterfacesFromTheMod());
+	public static final Holder<MobEffect> EXAMPLE_EFFECT =
+			Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(MOD_ID, "example"), new ExampleMobEffectThatUsesTheInterfacesFromTheMod());
 
 	@Override public void onInitialize() {}
 

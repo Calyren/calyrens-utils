@@ -3,7 +3,7 @@ package dev.calyren.calyrens_utils.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import dev.calyren.calyrens_utils.util.mob_effects.CustomEffectDuration;
 import dev.calyren.calyrens_utils.util.mob_effects.CustomEffectTooltip;
 import dev.calyren.calyrens_utils.util.mob_effects.StatusEffectBackground;
@@ -53,21 +53,16 @@ public class EffectsInInventoryMixin {
         return original.call(instance, durationScale, tickRate);
     }
 
-    @WrapOperation(method = "extractBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"))
+    @WrapOperation(method = "extractBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"))
     private void customEffectBackground(GuiGraphicsExtractor instance, RenderPipeline pipeline,
                                         Identifier texture, int x, int y, int width, int height,
                                         Operation<Void> original) {
-        if (this.kaleidoscope$currentEffect != null) {
-            MobEffect effect = this.kaleidoscope$currentEffect.getEffect().value();
-            if (effect instanceof StatusEffectBackground bg) {
-                if (texture.equals(EFFECT_BACKGROUND_SPRITE)) {
-                    original.call(instance, pipeline, bg.inventorySprite(), x, y, width, height);
-                    return;
-                }
-                if (texture.equals(EFFECT_BACKGROUND_AMBIENT_SPRITE)) {
-                    original.call(instance, pipeline, bg.ambientInventorySprite(), x, y, width, height);
-                    return;
-                }
+        if (this.kaleidoscope$currentEffect != null
+                && this.kaleidoscope$currentEffect.getEffect().value() instanceof StatusEffectBackground bg) {
+            if (texture.equals(EFFECT_BACKGROUND_SPRITE)) {
+                texture = bg.inventorySprite();
+            } else if (texture.equals(EFFECT_BACKGROUND_AMBIENT_SPRITE)) {
+                texture = bg.ambientInventorySprite();
             }
         }
         original.call(instance, pipeline, texture, x, y, width, height);
